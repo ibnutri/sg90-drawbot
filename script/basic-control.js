@@ -35,26 +35,46 @@ board.on("ready", function() {
   // servoRight.to(rightOffset, 5000, 90);
   //servoRight.sweep([rightOffset,90+rightOffset]);
   function liftArm(){
-  	servoUp.to(140);
+  	servoUp.to(140, 1000, 10);
   };
   function dropArm(){
-  	servoUp.to(180);
+  	servoUp.to(180, 1000, 10);
   };
   function moveLeft(degree){
     servoLeft.to((90-leftOffset)+degree);
   };
+  function moveLeftTimed(degree, interval, step){
+    if(typeof interval === 'undefined'){
+      interval = 2000;
+    }
+    if(typeof step === 'undefined'){
+      step = 90;
+    }
+    servoLeft.to((90-leftOffset)+degree, interval, step);
+  };
   function moveRight(degree){
     servoRight.to(degree+rightOffset);
+  };
+  function moveRightTimed(degree, interval, step){
+    if(typeof interval === 'undefined'){
+      interval = 2000;
+    }
+    if(typeof step === 'undefined'){
+      step = 90;
+    }
+    servoRight.to(degree+rightOffset, interval, step);
   };
   function leftToRight(){
     moveLeft(90);
       moveRight(90);
       setTimeout(function(){
         moveLeft(0);
-        moveRight(0);
+        moveRight(0); 
       }, 1000);
   }
-  setTimeout(dropArm, 1000);
+  
+  moveLeft(45);
+  moveRight(45);
   this.repl.inject({
     // Allow limited on/off control access to the
     // Led instance from the REPL.
@@ -77,6 +97,19 @@ board.on("ready", function() {
       moveLeft(45);
       moveRight(45);
       liftArm();
+    },
+    line: function(){
+      liftArm();
+      moveLeftTimed(90);
+      moveRightTimed(90);
+      setTimeout(function(){
+        dropArm();
+        moveLeftTimed(0, 1000, 90);
+        moveRightTimed(0, 1000, 90);
+      },3000);
+      setTimeout(function(){
+        liftArm();
+      },5000);
     }
   });
 });
