@@ -8,8 +8,10 @@ var app = require('http').createServer(),
 board = new five.Board({port: "/dev/tty.usbmodem411"});
 
 board.on("ready", function() {
-  var currentLeft = 0;
-  var currentRight = 0;
+  var startLeftPos = 40;
+  var startRightPos = 50;
+  var currentLeft = startLeftPos;
+  var currentRight = startRightPos;
   var currentHeight = 1; // 1 berarrit naik, 0 turun
  // setup the up servo (lifting pen)
   var servoUp = new five.Servo({
@@ -18,7 +20,7 @@ board.on("ready", function() {
     startingAt: 180
   });
   //zeroing
-  servoUp.to(180);
+  servoUp.to(140);
   // counter clockwise
   // servoUp.sweep([140,180]);
   var leftOffset = 45;
@@ -55,8 +57,8 @@ board.on("ready", function() {
   function moveRight(degree){
     servoRight.to(degree+rightOffset);
   };
-  moveLeft(45);
-  moveRight(45);
+  moveLeft(startLeftPos);
+  moveRight(startRightPos);
   liftArm();
   io.sockets.on('connection', function (socket) {
     /*
@@ -69,7 +71,7 @@ board.on("ready", function() {
     /*
      * Stop the bot on 'stop' event
      */
-    socket.on('stop', function () {
+    socket.on('toggle', function () {
       if(currentHeight == 1){
         dropArm();
         currentHeight = 0;
@@ -92,7 +94,7 @@ board.on("ready", function() {
           
             // bot.pivot(currentDirection + "-left");
             if(currentLeft > 0){
-              currentLeft -= 10;
+              currentLeft -= 5;
               moveLeft(currentLeft);
             }
           
@@ -103,7 +105,7 @@ board.on("ready", function() {
         case 'right':
           
             if(currentLeft < 90){
-              currentLeft += 10;
+              currentLeft += 5;
               moveLeft(currentLeft);
             }
             // bot.pivot(currentDirection + "-right");
@@ -114,7 +116,7 @@ board.on("ready", function() {
          */
         case 'fwd':
           if(currentRight > 0){
-              currentRight -= 10;
+              currentRight -= 5;
               moveRight(currentRight);
             };
           break;
@@ -123,14 +125,64 @@ board.on("ready", function() {
          */
         case 'rev':
           if(currentRight < 90){
-              currentRight += 10;
+              currentRight += 5;
               moveRight(currentRight);
             };
       }
     });
   });
+  function leftStepUp(){
+    if(currentLeft < 90){
+      currentLeft += 5;
+      moveLeft(currentLeft);
+    }
+  }
+  function leftStepDown(){
+    if(currentLeft > 0){
+      currentLeft -= 5;
+      moveLeft(currentLeft);
+    }
+  }
+  function rightStepUp(){
+    if(currentRight < 90){
+      currentRight += 5;
+      moveRight(currentRight);
+    };
+  }
+  function rightStepDown(){
+    if(currentRight > 0){
+      currentRight -= 5;
+      moveRight(currentRight);
+    };
+  }
+  function animate(){
+    // while(){
+
+    // }
+    for(var i = 0; i <= 10; i++){
+      setTimeout(function(){
+        rightStepDown();
+        leftStepUp();
+      },i*500);
+    }
+  }
   board.repl.inject({
     // n: bot
+    leftup: function(){
+      leftStepUp();
+    },
+    leftdown: function(){
+      leftStepDown();
+    },
+    rightup: function(){
+      rightStepUp();
+    },
+    rightDown: function(){
+      rightStepDown();
+    },
+    animate: function(){
+      animate();
+    }
   });
 });
 

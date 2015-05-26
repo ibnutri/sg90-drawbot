@@ -2,7 +2,7 @@
  * Initialize socket connection
  * Don't forget to update the server address here too
  */
-var socket = io.connect("http://localhost:8888");
+var socket = io.connect("http://192.168.1.131:8888");
 
 $(function () {
   var btnLeft   = $("#left"),
@@ -47,7 +47,7 @@ $(function () {
      */
     stop: function () {
       console.log("stop");
-      socket.emit("stop");
+      socket.emit("toggle");
     }
   }
 
@@ -61,33 +61,33 @@ $(function () {
    * Stop when not pressing it anymore
    */
   btnFwd.on("touchstart mousedown", nodeBot.fwd);
-  btnFwd.on("touchend mouseup touchcancel", nodeBot.stop);
+  // btnFwd.on("touchend mouseup touchcancel", nodeBot.stop);
 
   /*
    * Move left when pressing the left button
    * Stop when not pressing it anymore
    */
   btnLeft.on("touchstart mousedown", nodeBot.left);
-  btnLeft.on("touchend mouseup touchcancel", nodeBot.stop);
+  // btnLeft.on("touchend mouseup touchcancel", nodeBot.stop);
 
   /*
    * Move right when pressing the right button
    * Stop when not pressing it anymore
    */
   btnRight.on("touchstart mousedown", nodeBot.right);
-  btnRight.on("touchend mouseup touchcancel", nodeBot.stop);
+  // btnRight.on("touchend mouseup touchcancel", nodeBot.stop);
 
   /*
    * Move back when pressing the back button
    * Stop when not pressing it anymore
    */
   btnBack.on("touchstart mousedown", nodeBot.back);
-  btnBack.on("touchend mouseup touchcancel", nodeBot.stop);
+  // btnBack.on("touchend mouseup touchcancel", nodeBot.stop);
 
   /*
    * Stop when pressing the stop button
    */
-  btnStop.on("touchstart", nodeBot.Stop);
+  btnStop.on("touchstart mousedown", nodeBot.stop);
 
   /*
    * Mapping of keyboard keys to bot movements
