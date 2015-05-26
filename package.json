@@ -9,6 +9,8 @@
   "author": "Ibnu Triyono",
   "license": "ISC",
   "dependencies": {
-    "johnny-five": "^0.8.75"
+    "johnny-five": "^0.8.75",
+    "harp": "0.8.x",
+    "socket.io": "latest"
   }
 }
