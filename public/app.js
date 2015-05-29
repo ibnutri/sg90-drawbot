@@ -5,10 +5,10 @@
 var socket = io.connect("http://192.168.1.131:8888");
 
 $(function () {
-  var btnLeft   = $("#left"),
-      btnRight  = $("#right"),
-      btnFwd    = $("#fwd"),
-      btnBack   = $("#back"),
+  var btnLeft   = $("#right"),
+      btnRight  = $("#left"),
+      btnFwd    = $("#back"),
+      btnBack   = $("#fwd"),
       btnStop   = $("#stop");
   /*
    * Abstracted interface for the nodebot
